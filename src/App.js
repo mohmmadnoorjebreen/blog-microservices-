@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Post from "./postCreate"
+import PostList from "./postList"
+import axios from 'axios';
+import {useState , useEffect} from 'react'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+// eslint-disable-next-line import/no-anonymous-default-export
+export default () => {
+    const [posts , setPosts ] = useState({});
 
-export default App;
+    const fetchPosts = async () => {
+        const result = await axios.get('http://localhost:4500/posts');
+        setPosts(result.data)
+        }
+
+        useEffect(() =>{
+            fetchPosts();
+        },[])
+
+    return <div className="container">
+        <h1>create new post</h1>
+        <Post fetchPosts={fetchPosts} />
+        <hr/>
+        <h1>posts</h1>
+        <PostList posts={posts} fetchPosts = {fetchPosts}/>
+    </div>;
+};
+
